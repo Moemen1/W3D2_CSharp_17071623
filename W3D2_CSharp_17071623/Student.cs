@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,14 +21,19 @@ namespace W3D2_CSharp_17071623
 
     class Student
     {
-        public int Id { get; set; }
+        [Key]
+        public int StudentId { get; set; }
+        [Required,StringLength(15)]
         public string Voornaam { get; set; }
+        [Required, StringLength(20)]
         public string Achternaam { get; set; }
         public int Leeftijd { get; set; }
+        [Required]
+        public char Geslacht { get; set; }
 
         public override string ToString()
         {
-            return $"id: {Id} | Voornaam: {Voornaam} | Achternaam: {Achternaam} | Leeftijd: {Leeftijd}";
+            return $"id: {StudentId} | Voornaam: {Voornaam} | Achternaam: {Achternaam} | Leeftijd: {Leeftijd}";
         }
     }
 }

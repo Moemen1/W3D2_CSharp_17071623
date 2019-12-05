@@ -20,17 +20,25 @@ namespace W3D2_CSharp_17071623.Migrations
 
             modelBuilder.Entity("W3D2_CSharp_17071623.Student", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("StudentId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Achternaam");
+                    b.Property<string>("Achternaam")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Geslacht")
+                        .IsRequired()
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.Property<int>("Leeftijd");
 
-                    b.Property<string>("Voornaam");
+                    b.Property<string>("Voornaam")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
-                    b.HasKey("Id");
+                    b.HasKey("StudentId");
 
                     b.ToTable("Students");
                 });

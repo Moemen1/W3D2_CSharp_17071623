@@ -9,8 +9,8 @@ using W3D2_CSharp_17071623;
 namespace W3D2_CSharp_17071623.Migrations
 {
     [DbContext(typeof(StudentContext))]
-    [Migration("20191204182158_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20191205161100_AddedConstraints")]
+    partial class AddedConstraints
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,19 @@ namespace W3D2_CSharp_17071623.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Achternaam");
+                    b.Property<string>("Achternaam")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Geslacht")
+                        .IsRequired()
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.Property<int>("Leeftijd");
 
-                    b.Property<string>("Voornaam");
+                    b.Property<string>("Voornaam")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.HasKey("StudentId");
 
