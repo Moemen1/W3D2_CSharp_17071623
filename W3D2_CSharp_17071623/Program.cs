@@ -66,6 +66,13 @@ namespace W3D2_CSharp_17071623
             return context.Students.Where(s => s.Leeftijd > 19).ToList(); //Ouder dan 19 list
         }
 
+        static List<Student> Query1(StudentContext context, string letter)
+        {
+            return context.Students
+                .Where(s => s.Achternaam.StartsWith(letter, StringComparison.InvariantCultureIgnoreCase))
+                .Select(s => s).ToList();
+        }
+
         static void ShowRecords(StudentContext context, List<Student> StudentenList)
         {
             Console.WriteLine("\nStudenten in de database: ");
