@@ -70,7 +70,8 @@ namespace W3D2_CSharp_17071623
         {
             return context.Students
                 .Where(s => s.Achternaam.StartsWith(letter, StringComparison.InvariantCultureIgnoreCase))
-                .Select(s => s).ToList();
+                .Select(s => s)
+                .OrderBy(s => s.Achternaam).ToList();
         }
 
         static void ShowRecords(StudentContext context, List<Student> StudentenList)
