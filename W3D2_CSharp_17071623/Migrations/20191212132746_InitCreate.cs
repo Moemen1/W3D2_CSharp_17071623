@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace W3D2_CSharp_17071623.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,15 +11,16 @@ namespace W3D2_CSharp_17071623.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    StudentId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Voornaam = table.Column<string>(nullable: true),
-                    Achternaam = table.Column<string>(nullable: true),
-                    Leeftijd = table.Column<int>(nullable: false)
+                    Voornaam = table.Column<string>(maxLength: 15, nullable: false),
+                    Achternaam = table.Column<string>(maxLength: 20, nullable: false),
+                    Leeftijd = table.Column<int>(nullable: false),
+                    Geslacht = table.Column<string>(maxLength: 1, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.PrimaryKey("PK_Students", x => x.StudentId);
                 });
         }
 

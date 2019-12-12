@@ -13,10 +13,8 @@ namespace W3D2_CSharp_17071623
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-        }
-
-        
+                @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=W3D3CSharpOpdracht;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+        }        
     }
 
     class Student
@@ -27,12 +25,16 @@ namespace W3D2_CSharp_17071623
         public string Voornaam { get; set; }
         [Required, StringLength(20)]
         public string Achternaam { get; set; }
-        public int Leeftijd { get; set; }
-        [Required]
+        public int? Leeftijd { get; set; }
+        [Required, StringLength(1)]
         public char Geslacht { get; set; }
 
         public override string ToString()
         {
+            if(Leeftijd == null)
+            {
+                return $"id: {StudentId} | Voornaam: {Voornaam} | Achternaam: {Achternaam}";
+            }
             return $"id: {StudentId} | Voornaam: {Voornaam} | Achternaam: {Achternaam} | Leeftijd: {Leeftijd}";
         }
     }

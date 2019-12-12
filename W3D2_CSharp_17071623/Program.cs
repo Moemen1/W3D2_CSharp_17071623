@@ -6,54 +6,64 @@ namespace W3D2_CSharp_17071623
 {
     class Program
     {
-        static void AddStudentRecords(StudentContext context)
+        static void AddInputStudenten(StudentContext context)
         {
-            Console.Write("Wilt u records aanmaken?n/" +
+            Console.Write("Wilt u records aanmaken?\n" +
                           "Typ Ja of Nee: ");
-            string input = Console.ReadLine().ToLower();
+            string input = Console.ReadLine().ToLower();   
 
-            Console.Write("Hoeveel records wilt u invullen?: ");
-            int count = Int32.Parse(Console.ReadLine());
-
-            for (int i = 0; i < count; i++)
+            if (input == "ja")
             {
-                if (input == "ja")
+                Console.Write("Hoeveel records wilt u invullen?: ");
+                int count = Int32.Parse(Console.ReadLine());
+
+                for (int i = 0; i < count; i++)
                 {
                     Console.Write("Student voornaam: ");
                     string voornaam = Console.ReadLine();
 
                     Console.Write("Student achternaam: ");
                     string achternaam = Console.ReadLine();
-
+                    
                     Console.Write("Student leeftijd: ");
                     int leeftijd = Int32.Parse(Console.ReadLine());
+
+                    Console.Write("Student geslacht (1 character): ");
+                    char geslacht = Console.ReadLine().ToCharArray()[0];                   
 
                     var student = new Student
                     {
 
                         Voornaam = voornaam,
                         Achternaam = achternaam,
-                        Leeftijd = leeftijd
+                        Leeftijd = leeftijd,
+                        Geslacht = geslacht
                     };
 
                     context.Add(student);
                     context.SaveChanges();
                     Console.WriteLine();
                 }
-            }
+             }            
         }
 
-        static void AddDummyStudenten(StudentContext context)
+        static void AddStudenten(StudentContext context)
         {
+            if(context.Students.Count() == 0)
+            {
+                context.Add(new Student()
+                { Voornaam = "Bob", Achternaam = "Jansen", Leeftijd = 20, Geslacht = 'M' });
+                context.Add(new Student()
+                { Voornaam = "Alice", Achternaam = "Smith", Leeftijd = 22, Geslacht = 'V' });
+                context.Add(new Student()
+                { Voornaam = "Carl", Achternaam = "Johnson", Leeftijd = 23, Geslacht = 'M' });
+                context.Add(new Student()
+                { Voornaam = "John", Achternaam = "Waters", Leeftijd = 19, Geslacht = 'M' });
+                context.Add(new Student()
+                { Voornaam = "Will", Achternaam = "Anderson", Leeftijd = 23, Geslacht = 'M' });
 
-            context.Add(new Student()
-                { Voornaam = "DummyStudent1", Achternaam = "DummmyAchternaam1", Leeftijd = 20 });
-            context.Add(new Student()
-                {Voornaam = "DummyStudent2", Achternaam = "AummmyAchternaam2", Leeftijd = 25 });
-            context.Add(new Student()
-                { Voornaam = "DummyStudent3", Achternaam = "ZummmyAchternaam3", Leeftijd = 23 });
-
-            context.SaveChanges();
+                context.SaveChanges();
+            }         
         }
 
         static List<Student> StudentOrderByLeeftijd(StudentContext context)
@@ -66,19 +76,26 @@ namespace W3D2_CSharp_17071623
             return context.Students.Where(s => s.Leeftijd > 19).ToList(); //Ouder dan 19 list
         }
 
-        static List<Student> Query1(StudentContext context, string letter)
+        static Object StudentWhereAchternaamStartsWith(StudentContext context, string letter)
         {
             return context.Students
-                .Where(s => s.Achternaam.StartsWith(letter, StringComparison.InvariantCultureIgnoreCase))
-                .Select(s => s)
-                .OrderBy(s => s.Achternaam).ToList();
+                .Where(s => s.Achternaam.StartsWith(letter, StringComparison.InvariantCultureIgnoreCase)) // filter eerst op achternaam met begin letter               
+                .OrderBy(s => s.Voornaam)
+                .ThenBy(s => s.Leeftijd);            
         }
 
-        static void ShowRecords(StudentContext context, List<Student> StudentenList)
+        static Object StudentOuderOfGelijkAanTwintigMetGeslacht(StudentContext context, char geslacht)
+        {
+            return context.Students
+                .Where(s => s.Geslacht == geslacht && s.Leeftijd >= 20)
+                .Select(s => new { s.Voornaam, s.Achternaam }).ToList();           
+        }
+
+        static void ShowRecords(StudentContext context, Object StudentenList)
         {
             Console.WriteLine("\nStudenten in de database: ");
 
-            foreach (var student in StudentenList)
+            foreach (var student in (IEnumerable<Object>)StudentenList)
             {
                 Console.WriteLine(student);
             }
@@ -102,12 +119,11 @@ namespace W3D2_CSharp_17071623
         {
             using (var context = new StudentContext())
             {
-                AddStudentRecords(context); // Geef invoer om records toe te voegen
+                AddInputStudenten(context); // Geef invoer om records toe te voegen
+                AddStudenten(context);
 
-                /*ShowRecords(context, StudentOrderByLeeftijd(context)); // Records ordered bij leeftijd asc
-                ShowRecords(context, StudentSelectOuderDanNegentien(context)); // Records van studenten op leeftijd ouder dan 19*/
-
-                ShowRecords(context); // Alle studenten
+                //ShowRecords(context, StudentWhereAchternaamStartsWith(context, "A")); // Alle studenten
+                ShowRecords(context, StudentOuderOfGelijkAanTwintigMetGeslacht(context, 'M'));
             }
 
             Console.ReadKey();
